@@ -8,7 +8,6 @@ public class BookLoungeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookLoungeApplication.class, args);
-		System.out.println("Hello World");
 	}
 
 }
