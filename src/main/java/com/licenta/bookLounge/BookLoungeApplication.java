@@ -1,4 +1,4 @@
-package com.example.booklounge;
+package com.licenta.bookLounge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class BookLoungeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BookLoungeApplication.class, args);
 	}
-
 }
