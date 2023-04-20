@@ -2,7 +2,7 @@ package com.licenta.bookLounge.controller;
 
 import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
-import com.licenta.bookLounge.service.BookRepository;
+import com.licenta.bookLounge.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

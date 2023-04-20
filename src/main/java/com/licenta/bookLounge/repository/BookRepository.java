@@ -1,4 +1,4 @@
-package com.licenta.bookLounge.service;
+package com.licenta.bookLounge.repository;
 
 
 import com.licenta.bookLounge.model.Book;

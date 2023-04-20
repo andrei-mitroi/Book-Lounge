@@ -8,11 +8,8 @@ public class Book {
 
     @Id
     private String id;
-
     private String title;
     private String author;
     private String genre;
     private String description;
-    private boolean availability;
-
 }
