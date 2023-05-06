@@ -37,7 +37,7 @@ public class JwtService {
     public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder().setClaims(extractClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 8)).
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 8)).
                 signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

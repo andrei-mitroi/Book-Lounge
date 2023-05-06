@@ -20,6 +20,5 @@ public class Book {
     private String author;
     private String genre;
     private String description;
-    private String pdfUrl;
 
 }
