@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Book {
 
     @Id
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private String title;
     private String author;
     private String genre;
