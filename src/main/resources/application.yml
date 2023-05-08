@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/AuthenticationSystem
+      uri: mongodb://localhost:27017/BookLounge
       host: localhost
       port: 27017
       database: BookLounge
