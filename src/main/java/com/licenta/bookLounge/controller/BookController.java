@@ -4,6 +4,7 @@ import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.repository.BookRepository;
+import com.licenta.bookLounge.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
 public class BookController {
-
    private final BookRepository bookRepository;
+   private final BookService bookService;
+   private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
    @GetMapping("/books")
    public List<Book> getAllBooks() {
@@ -36,13 +40,14 @@ public class BookController {
    }
    @PostMapping("/books/")
    public ResponseEntity<Void> createBook(@RequestBody BookRequest bookRequest) {
+      logger.info("Creating book: {}", bookRequest.getTitle());
       Book book = Book.builder()
             .title(bookRequest.getTitle())
             .author(bookRequest.getAuthor())
             .genre(bookRequest.getGenre())
             .description(bookRequest.getDescription())
             .build();
-      bookRepository.save(book);
+      bookService.saveBook(book);
       return ResponseEntity.status(HttpStatus.CREATED).build();
    }
    @PutMapping("/books/{id}")
