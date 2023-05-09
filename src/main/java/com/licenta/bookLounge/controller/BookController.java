@@ -1,5 +1,6 @@
 package com.licenta.bookLounge.controller;
 
+import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.model.BookRequest;
@@ -23,11 +24,10 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/auth")
 public class BookController {
    private final BookRepository bookRepository;
-   private final BookService bookService;
-   private static final Logger logger = LoggerFactory.getLogger(BookService.class);
+   private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
 
    @GetMapping("/books")
    public List<Book> getAllBooks() {
@@ -47,7 +47,7 @@ public class BookController {
             .genre(bookRequest.getGenre())
             .description(bookRequest.getDescription())
             .build();
-      bookService.saveBook(book);
+      bookRepository.save(book);
       return ResponseEntity.status(HttpStatus.CREATED).build();
    }
    @PutMapping("/books/{id}")
