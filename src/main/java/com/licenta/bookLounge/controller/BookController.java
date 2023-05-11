@@ -5,22 +5,14 @@ import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.repository.BookRepository;
-import com.licenta.bookLounge.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +23,7 @@ public class BookController {
 
    @GetMapping("/books")
    public List<Book> getAllBooks() {
+      logger.info("Getting all books");
       return bookRepository.findAll();
    }
 
@@ -40,7 +33,7 @@ public class BookController {
    }
    @PostMapping("/books/")
    public ResponseEntity<Void> createBook(@RequestBody BookRequest bookRequest) {
-      logger.info("Creating book: {}", bookRequest.getTitle());
+      logger.info("Creating book registry for: {}", bookRequest.getTitle());
       Book book = Book.builder()
             .title(bookRequest.getTitle())
             .author(bookRequest.getAuthor())
@@ -51,7 +44,8 @@ public class BookController {
       return ResponseEntity.status(HttpStatus.CREATED).build();
    }
    @PutMapping("/books/{id}")
-   public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody Book updatedBook) {
+   public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody BookRequest updatedBook) {
+      logger.info("Updating book No.: {}", id);
       Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound(id));
       book.setTitle(updatedBook.getTitle());
       book.setAuthor(updatedBook.getAuthor());
