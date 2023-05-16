@@ -4,6 +4,7 @@ import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.model.BookRequest;
+import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
 public class BookController {
    private final BookRepository bookRepository;
    private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
@@ -31,8 +31,8 @@ public class BookController {
    public Book getBook(@PathVariable String id) {
       return bookRepository.findById(id).orElseThrow(() -> new BookNotFound(id));
    }
-   @PostMapping("/books/")
-   public ResponseEntity<Void> createBook(@RequestBody BookRequest bookRequest) {
+   @PostMapping("/addBook")
+   public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest bookRequest) {
       logger.info("Creating book registry for: {}", bookRequest.getTitle());
       Book book = Book.builder()
             .title(bookRequest.getTitle())
