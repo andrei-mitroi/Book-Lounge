@@ -1,6 +1,7 @@
 package com.licenta.bookLounge.controller;
 
 import com.licenta.bookLounge.BookLoungeApplication;
+import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,13 @@ public class BookController {
    public ResponseEntity<Book> getBook(@PathVariable String bookId) {
       try {
          Optional<Book> optionalBook = bookRepository.findById(bookId);
-         return optionalBook.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+         if (optionalBook.isPresent()) {
+            return ResponseEntity.ok(optionalBook.get());
+         } else {
+            throw new BookNotFound("Book with ID " + bookId + " not found");
+         }
+      } catch (BookNotFound ex) {
+         throw ex;
       } catch (Exception e) {
          logger.error("Failed to retrieve book with ID " + bookId + ": " + e.getMessage());
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -49,6 +56,10 @@ public class BookController {
    @PostMapping("/addBook")
    public ResponseEntity<Book> addBook(@RequestBody Book book) {
       try {
+         boolean bookExists = bookRepository.existsByTitle(book.getTitle());
+         if (bookExists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+         }
          logger.info("Saving " + book.getTitle() + " by " + book.getAuthor() + " to the database.");
          Book savedBook = bookRepository.save(book);
          return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);

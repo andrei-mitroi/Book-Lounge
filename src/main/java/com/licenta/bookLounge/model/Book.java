@@ -8,19 +8,16 @@ import java.util.UUID;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Books")
 public class Book {
 
     @Id
     private String id = UUID.randomUUID().toString();
-    @NonNull
     private String title;
-    @NonNull
     private String author;
-    @NonNull
     private String genre;
-    @NonNull
     private String description;
 
 }
