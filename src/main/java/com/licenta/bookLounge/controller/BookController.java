@@ -4,7 +4,6 @@ import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.BookNotFound;
 import com.licenta.bookLounge.model.Book;
 import com.licenta.bookLounge.repository.BookRepository;
-import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
