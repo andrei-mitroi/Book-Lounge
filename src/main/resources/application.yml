@@ -28,3 +28,8 @@ spring:
           connection-timeout: 5000
           timeout: 3000
           write-timeout: 5000
+  aws:
+    profile:
+      name: AndreiMitroi
+      region: eu-north-1
+      bucket: book-lounge-storage
