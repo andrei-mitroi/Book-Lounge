@@ -1,12 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/BookLounge
-      host: localhost
-      port: 27017
+      uri: mongodb+srv://andreiMitroi:0UTyH7fPNA5QDzNi@booklounge.b754vyg.mongodb.net/?tls=true
       database: BookLounge
       username: andreiMitroi
-      password: password
+      password: 0UTyH7fPNA5QDzNi
   security:
     jwt:
       secret: 327235753878214125442A472D4B6150645367566B597033733676397924423F4528482B4D6251655468576D5A7134743777217A25432A46294A404E63526655
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connection-timeout: 5000
+          timeout: 3000
+          write-timeout: 5000
+  aws:
+    profile:
+      name: AndreiMitroi
+      region: eu-north-1
+      bucket: book-lounge-storage

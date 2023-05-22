@@ -13,17 +13,21 @@ import java.util.UUID;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Users")
 public class User implements UserDetails {
 
     @Id
     private String id = UUID.randomUUID().toString();
+    @NonNull
     private String firstName;
+    @NonNull
     private String lastName;
+    @NonNull
     private String email;
+    @NonNull
     private String password;
+    @NonNull
     private Role role;
 
     @Override
@@ -37,7 +41,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword(){
+    public @NonNull String getPassword(){
         return password;
     }
 

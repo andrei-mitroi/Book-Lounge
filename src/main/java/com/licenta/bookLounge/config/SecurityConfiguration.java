@@ -23,17 +23,16 @@ public class SecurityConfiguration{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/books/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/books/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks", "/BookLounge/v1/getBook/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/BookLounge/v1/updateBook/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/BookLounge/v1/deleteBook/**").authenticated()
+                        .anyRequest().permitAll()
                 )
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
