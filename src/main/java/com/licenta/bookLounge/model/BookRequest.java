@@ -12,4 +12,5 @@ public class BookRequest {
    private String author;
    private String genre;
    private String description;
+   private String fileName;
 }
