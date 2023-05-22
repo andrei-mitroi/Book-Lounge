@@ -30,8 +30,6 @@ public class S3Service {
                 .key(fileName)
                 .build();
 
-
-
         return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
 }
