@@ -2,8 +2,9 @@ package com.licenta.bookLounge.controller;
 
 import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.BookNotFound;
-import com.licenta.bookLounge.model.Book;
-import com.licenta.bookLounge.repository.BookRepository;
+import com.licenta.bookLounge.model.BookRequest;
+import com.licenta.bookLounge.model.BookResponse;
+import com.licenta.bookLounge.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,20 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("BookLounge/v1")
 @RequiredArgsConstructor
 public class BookController {
-
    private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
-   private final BookRepository bookRepository;
+   private final BookService bookService;
 
    @GetMapping("/getAllBooks")
-   public ResponseEntity<List<Book>> getAllBooks() {
+   public ResponseEntity<List<BookResponse>> getAllBooks() {
       try {
-         List<Book> books = bookRepository.findAll();
+         List<BookResponse> books = bookService.getAllBooks();
          if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
          }
@@ -37,14 +36,10 @@ public class BookController {
    }
 
    @GetMapping("/getBook/{bookId}")
-   public ResponseEntity<Book> getBook(@PathVariable String bookId) {
+   public ResponseEntity<BookResponse> getBook(@PathVariable String bookId) {
       try {
-         Optional<Book> optionalBook = bookRepository.findById(bookId);
-         if (optionalBook.isPresent()) {
-            return ResponseEntity.ok(optionalBook.get());
-         } else {
-            throw new BookNotFound("Book with ID " + bookId + " not found");
-         }
+         BookResponse book = bookService.getBook(bookId);
+         return ResponseEntity.ok(book);
       } catch (BookNotFound ex) {
          throw ex;
       } catch (Exception e) {
@@ -54,14 +49,12 @@ public class BookController {
    }
 
    @PostMapping("/addBook")
-   public ResponseEntity<Book> addBook(@RequestBody Book book) {
+   public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest bookRequest) {
       try {
-         boolean bookExists = bookRepository.existsByTitle(book.getTitle());
-         if (bookExists) {
+         BookResponse savedBook = bookService.addBook(bookRequest);
+         if (savedBook == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
          }
-         logger.info("Saving " + book.getTitle() + " by " + book.getAuthor() + " to the database.");
-         Book savedBook = bookRepository.save(book);
          return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
       } catch (Exception e) {
          logger.error("Failed to add book: " + e.getMessage());
@@ -70,17 +63,13 @@ public class BookController {
    }
 
    @PutMapping("/updateBook/{bookId}")
-   public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody Book updatedBook) {
+   public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookRequest bookRequest) {
       try {
-         logger.info("Updating information for " + updatedBook.getTitle() + " by " + updatedBook.getAuthor() + ".");
-         Optional<Book> optionalBook = bookRepository.findById(bookId);
-         if (optionalBook.isEmpty()) {
+         BookResponse updatedBook = bookService.updateBook(bookId, bookRequest);
+         if (updatedBook == null) {
             return ResponseEntity.notFound().build();
          }
-
-         updatedBook.setId(bookId);
-         Book savedBook = bookRepository.save(updatedBook);
-         return ResponseEntity.ok(savedBook);
+         return ResponseEntity.ok(updatedBook);
       } catch (Exception e) {
          logger.error("Failed to update book with ID " + bookId + ": " + e.getMessage());
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -90,12 +79,10 @@ public class BookController {
    @DeleteMapping("/deleteBook/{bookId}")
    public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
       try {
-         Optional<Book> optionalBook = bookRepository.findById(bookId);
-         if (optionalBook.isEmpty()) {
+         boolean deleted = bookService.deleteBook(bookId);
+         if (!deleted) {
             return ResponseEntity.notFound().build();
          }
-
-         bookRepository.deleteById(bookId);
          return ResponseEntity.noContent().build();
       } catch (Exception e) {
          logger.error("Failed to delete book with ID " + bookId + ": " + e.getMessage());
@@ -103,3 +90,4 @@ public class BookController {
       }
    }
 }
+

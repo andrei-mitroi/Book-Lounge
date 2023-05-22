@@ -29,7 +29,7 @@ spring:
           timeout: 3000
           write-timeout: 5000
   aws:
-    profile:
-      name: AndreiMitroi
-      region: eu-north-1
-      bucket: book-lounge-storage
+    region: eu-north-1
+    bucketName: book-lounge-storage
+    accessKey: AKIA53JIP72EMNOQ3LFI
+    secretKey: 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
