@@ -31,5 +31,3 @@ spring:
   aws:
     region: eu-north-1
     bucketName: book-lounge-storage
-    accessKey: AKIA53JIP72EMNOQ3LFI
-    secretKey: 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
