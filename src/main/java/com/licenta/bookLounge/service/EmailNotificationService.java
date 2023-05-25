@@ -27,7 +27,7 @@ public class EmailNotificationService implements EmailSender{
             mimeMessageHelper.setText(email, true);
             mimeMessageHelper.setTo(receiver);
             mimeMessageHelper.setSubject("Welcome to BookLounge!");
-            mimeMessageHelper.setFrom("hello@BookLounge.com");
+            mimeMessageHelper.setFrom("booklounge.business@gmail.com");
             mailSender.send(mimeMessage);
         } catch (jakarta.mail.MessagingException e) {
             logger.error("Failed to send email", e);
