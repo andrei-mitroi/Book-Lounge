@@ -1,7 +1,7 @@
 package com.licenta.bookLounge.controller;
 
 import com.licenta.bookLounge.BookLoungeApplication;
-import com.licenta.bookLounge.exception.BookNotFound;
+import com.licenta.bookLounge.exception.BookNotFoundException;
 import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.service.BookService;
@@ -40,7 +40,7 @@ public class BookController {
       try {
          BookResponse book = bookService.getBook(bookId);
          return ResponseEntity.ok(book);
-      } catch (BookNotFound ex) {
+      } catch (BookNotFoundException ex) {
          throw ex;
       } catch (Exception e) {
          logger.error("Failed to retrieve book with ID " + bookId + ": " + e.getMessage());
