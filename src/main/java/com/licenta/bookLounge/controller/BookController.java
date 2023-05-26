@@ -5,12 +5,14 @@ import com.licenta.bookLounge.exception.BookNotFoundException;
 import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.service.BookService;
+import com.licenta.bookLounge.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class BookController {
    private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
    private final BookService bookService;
+   private final S3Service s3Service;
 
    @GetMapping("/getAllBooks")
    public ResponseEntity<List<BookResponse>> getAllBooks() {
@@ -49,9 +52,13 @@ public class BookController {
    }
 
    @PostMapping("/addBook")
-   public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest bookRequest) {
+   public ResponseEntity<BookResponse> addBook(@RequestParam("file") MultipartFile file,
+                                               @ModelAttribute BookRequest bookRequest) {
       try {
+         String folderName = bookRequest.getGenre();
+         String pdfLink = s3Service.uploadFile(file, folderName);
          BookResponse savedBook = bookService.addBook(bookRequest);
+         bookRequest.setPdfLink(pdfLink);
          if (savedBook == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
          }
