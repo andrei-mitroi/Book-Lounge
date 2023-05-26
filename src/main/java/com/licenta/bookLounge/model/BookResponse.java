@@ -13,4 +13,5 @@ public class BookResponse {
    private String author;
    private String genre;
    private String description;
+   private String pdfLink;
 }

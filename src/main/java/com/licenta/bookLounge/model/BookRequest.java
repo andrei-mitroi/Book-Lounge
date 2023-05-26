@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRequest {
+
    private String title;
    private String author;
    private String genre;
    private String description;
+   private String pdfLink;
 }
