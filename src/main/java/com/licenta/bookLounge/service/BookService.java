@@ -62,7 +62,7 @@ public class BookService {
 
     private BookResponse createBookResponse(Book book) {
         return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(),
-                book.getDescription(), book.getFileName());
+                book.getDescription(), book.getPdfLink());
     }
 
     private Book createBook(BookRequest bookRequest) {
@@ -71,7 +71,7 @@ public class BookService {
                 .author(bookRequest.getAuthor())
                 .genre(bookRequest.getGenre())
                 .description(bookRequest.getDescription())
-                .fileName(bookRequest.getFileName())
+                .pdfLink(bookRequest.getPdfLink())
                 .build();
     }
 
@@ -81,6 +81,6 @@ public class BookService {
         book.setAuthor(bookRequest.getAuthor());
         book.setGenre(bookRequest.getGenre());
         book.setDescription(bookRequest.getDescription());
-        book.setFileName(bookRequest.getFileName());
+        book.setPdfLink(bookRequest.getPdfLink());
     }
 }

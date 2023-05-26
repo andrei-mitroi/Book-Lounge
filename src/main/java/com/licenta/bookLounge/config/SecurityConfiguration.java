@@ -24,8 +24,9 @@ public class SecurityConfiguration{
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks", "/BookLounge/v1/getBook/**")
+                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getBook/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/BookLounge/v1/updateBook/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/BookLounge/v1/deleteBook/**").authenticated()
