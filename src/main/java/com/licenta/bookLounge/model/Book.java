@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @NonNull
     private String title;
     @NonNull
