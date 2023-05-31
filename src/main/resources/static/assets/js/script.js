@@ -107,6 +107,28 @@ $(document).ready(function() {
 		}
 	}
 
+	function sendEmail() {
+		var name = $('#subject').val();
+		var email = $('#exampleInputEmail2').val();
+		var message = $('#message').val();
+
+		$.ajax({
+			type: 'POST',
+			url: '/BookLounge/v1/contact',
+			data: JSON.stringify({ name: name, email: email, message: message }),
+			contentType: 'application/json',
+			success: function(response) {
+				alert(response);
+				$('#subject').val('');
+				$('#exampleInputEmail2').val('');
+				$('#message').val('');
+			},
+			error: function(xhr, status, error) {
+				alert('Error: ' + error);
+			}
+		});
+	}
+
 	setSlideNav();
 	setHeaderBackground();
 
@@ -144,4 +166,9 @@ $(document).ready(function() {
 		e.preventDefault();
 		registerUser(e);
     });
+
+	$('#contactForm').submit(function(e) {
+		e.preventDefault();
+		sendEmail();
+	});
 });
