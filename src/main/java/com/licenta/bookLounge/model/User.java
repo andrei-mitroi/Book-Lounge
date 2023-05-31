@@ -18,7 +18,7 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @NonNull
     private String firstName;
     @NonNull
@@ -29,6 +29,8 @@ public class User implements UserDetails {
     private String password;
     @NonNull
     private Role role;
+
+    private boolean hasUploadedBook;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

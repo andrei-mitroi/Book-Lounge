@@ -38,7 +38,7 @@ public class AuthenticationService {
             throw new DuplicateEmail("Email already exists.");
         }
         var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
-                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(request.getRole())
+                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(request.getRole()).hasUploadedBook(false)
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

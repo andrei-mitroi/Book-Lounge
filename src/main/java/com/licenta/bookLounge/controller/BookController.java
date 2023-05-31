@@ -4,29 +4,27 @@ import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.BookNotFoundException;
 import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.model.BookResponse;
+import com.licenta.bookLounge.model.User;
+import com.licenta.bookLounge.repository.UserRepository;
 import com.licenta.bookLounge.service.BookService;
 import com.licenta.bookLounge.service.S3Service;
+import com.licenta.bookLounge.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
-import java.net.URI;
-import java.util.List;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("BookLounge/v1")
@@ -36,36 +34,30 @@ public class BookController {
    private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
    private final BookService bookService;
    private final S3Service s3Service;
+   private final UserService userService;
+
 
    @Value("${spring.aws.bucketName}")
    private String bucketName;
    @Value("${spring.aws.region}")
    String region;
-
-
-   @GetMapping("/getAllBooks")
-   public ResponseEntity<List<BookResponse>> getAllBooks() {
-      try {
-         List<BookResponse> books = bookService.getAllBooks();
-         if (books.isEmpty()) {
-            return ResponseEntity.noContent().build();
-         }
-         return ResponseEntity.ok(books);
-      } catch (Exception e) {
-         logger.error("Failed to retrieve books: " + e.getMessage());
-         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-      }
-   }
+   private final UserRepository userRepository;
 
    @GetMapping("/getBook/{bookId}")
-   public ResponseEntity<Resource> getBook(@PathVariable String bookId) {
+   public ResponseEntity<Resource> getBook(@PathVariable String bookId, Principal principal) {
       try {
+         User user = userService.getUserByEmail(principal.getName());
+         if(!user.isHasUploadedBook()){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+         }
+
          BookResponse book = bookService.getBook(bookId);
          String pdfLink = book.getPdfLink();
 
          S3Client s3Client = S3Client.builder()
                  .region(Region.of(region))
                  .build();
+
 
          String bucketName = extractBucketNameFromS3Uri(pdfLink);
          String objectKey = extractObjectKeyFromS3Uri(pdfLink);
@@ -83,6 +75,9 @@ public class BookController {
          HttpHeaders headers = new HttpHeaders();
          headers.setContentDisposition(ContentDisposition.attachment().filename(book.getTitle() + ".pdf").build());
 
+         user.setHasUploadedBook(false);
+         userRepository.save(user);
+
          return ResponseEntity.ok()
                  .headers(headers)
                  .contentLength(fileBytes.length)
@@ -99,7 +94,7 @@ public class BookController {
 
    @PostMapping("/addBook")
    public ResponseEntity<BookResponse> addBook(@RequestParam("file") MultipartFile file,
-                                               @ModelAttribute BookRequest bookRequest) {
+                                               @ModelAttribute BookRequest bookRequest, Principal principal) {
       try {
          String folderName = bookRequest.getGenre();
          s3Service.uploadFile(file, folderName, bucketName);
@@ -107,40 +102,18 @@ public class BookController {
          String pdfLink= createPdfLink(bookRequest);
          bookRequest.setPdfLink(pdfLink);
          BookResponse savedBook = bookService.addBook(bookRequest);
+
+         User user = userService.getUserByEmail(principal.getName());
+
+         user.setHasUploadedBook(true);
+         userService.saveUser(user);
+
          if (savedBook == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
          }
          return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
       } catch (Exception e) {
          logger.error("Failed to add book: " + e.getMessage());
-         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-      }
-   }
-
-   @PutMapping("/updateBook/{bookId}")
-   public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookRequest bookRequest) {
-      try {
-         BookResponse updatedBook = bookService.updateBook(bookId, bookRequest);
-         if (updatedBook == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-         }
-         return ResponseEntity.ok(updatedBook);
-      } catch (Exception e) {
-         logger.error("Failed to update book with ID " + bookId + ": " + e.getMessage());
-         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-      }
-   }
-
-   @DeleteMapping("/deleteBook/{bookId}")
-   public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
-      try {
-         boolean deleted = bookService.deleteBook(bookId);
-         if (!deleted) {
-            return ResponseEntity.notFound().build();
-         }
-         return ResponseEntity.noContent().build();
-      } catch (Exception e) {
-         logger.error("Failed to delete book with ID " + bookId + ": " + e.getMessage());
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
       }
    }
