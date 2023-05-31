@@ -25,6 +25,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("BookLounge/v1")
@@ -42,6 +43,21 @@ public class BookController {
    @Value("${spring.aws.region}")
    String region;
    private final UserRepository userRepository;
+
+
+   @GetMapping("/getAllBooks")
+   public ResponseEntity<List<BookResponse>> getAllBooks() {
+      try {
+         List<BookResponse> books = bookService.getAllBooks();
+         if (books.isEmpty()) {
+            return ResponseEntity.noContent().build();
+         }
+         return ResponseEntity.ok(books);
+      } catch (Exception e) {
+         logger.error("Failed to retrieve books: " + e.getMessage());
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      }
+   }
 
    @GetMapping("/getBook/{bookId}")
    public ResponseEntity<Resource> getBook(@PathVariable String bookId, Principal principal) {
