@@ -137,11 +137,6 @@ $(document).ready(function() {
 
 	$('#do-register').click(function(e) {
 		e.preventDefault();
-		register();
-	});
-
-	$('#do-register').click(function(e) {
-		e.preventDefault();
 		registerUser(e);
 	});
 });
