@@ -63,6 +63,7 @@ body {
     border-radius: 3px;
     padding: 5px 2em;
     transition: 0.5s;
+    margin-right: 10px;
 }
 
 .register .form .btn-login:hover,
@@ -72,27 +73,16 @@ body {
     transition: 0.5s;
 }
 
-footer {
-    position: absolute;
-    color: #136a8a;
-    bottom: 10px;
-    padding-left: 20px;
+.register .form p {
+    text-align: center;
+    margin-top: 10px;
 }
 
-footer p {
-    display: inline;
+.register .form select#role {
+    margin-top: -50px;
 }
 
-footer a {
-    color: green;
+.register .form p a {
+    color: white;
     text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-footer .heart {
-    color: #B22222;
-    font-size: 1.5em;
 }
