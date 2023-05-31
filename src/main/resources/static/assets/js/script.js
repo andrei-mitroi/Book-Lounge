@@ -1,130 +1,147 @@
-(function($,sr){
+$(document).ready(function() {
 
-  // debouncing function from John Hann
-  // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-  var debounce = function (func, threshold, execAsap) {
-      var timeout;
+	var $wrapper = $('#wrapper');
+	var $drawerRight = $('#drawer-right');
 
-      return function debounced () {
-          var obj = this, args = arguments;
-          function delayed () {
-              if (!execAsap)
-                  func.apply(obj, args);
-              timeout = null;
-          };
-
-          if (timeout)
-              clearTimeout(timeout);
-          else if (execAsap)
-              func.apply(obj, args);
-
-          timeout = setTimeout(delayed, threshold || 100);
-      };
-  }
-  // smartresize 
-  jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
-
-})(jQuery,'smartresize');
-
-
-
-
-
-
-
-(function(){
-
-	$wrapper = $('#wrapper');
-	$drawerRight = $('#drawer-right');
-
-	///////////////////////////////
-	// Set Home Slideshow Height
-	///////////////////////////////
-
-	/*function setHomeBannerHeight() {
-		var windowHeight = jQuery(window).height();	
-		jQuery('#header').height(windowHeight);
-	}*/
-
-	///////////////////////////////
-	// Center Home Slideshow Text
-	///////////////////////////////
-
-	/*function centerHomeBannerText() {
-			var bannerText = jQuery('#header > .center');
-			var bannerTextTop = (jQuery('#header').actual('height')/2) - (jQuery('#header > .center').actual('height')/2) - 40;		
-			bannerText.css('padding-top', bannerTextTop+'px');		
-			bannerText.show();
-	}*/
-
-
-
-	///////////////////////////////
-	// SlideNav
-	///////////////////////////////
-
-	function setSlideNav(){
-		jQuery(".toggleDrawer").click(function(e){
-			//alert($wrapper.css('marginRight'));
+	function setSlideNav() {
+		$(".toggleDrawer").click(function(e) {
 			e.preventDefault();
 
-			if($wrapper.css('marginLeft')=='0px'){
-				$drawerRight.animate({marginRight : 0},500);
-				$wrapper.animate({marginLeft : -300},500);
+			if ($wrapper.css('marginLeft') === '0px') {
+				$drawerRight.animate({
+					marginRight: 0
+				}, 500);
+				$wrapper.animate({
+					marginLeft: -300
+				}, 500);
+			} else {
+				$drawerRight.animate({
+					marginRight: -300
+				}, 500);
+				$wrapper.animate({
+					marginLeft: 0
+				}, 500);
 			}
-			else{
-				$drawerRight.animate({marginRight : -300},500);
-				$wrapper.animate({marginLeft : 0},500);
-			}
-			
-		})
+		});
 	}
 
-	function setHeaderBackground() {		
-		var scrollTop = jQuery(window).scrollTop(); // our current vertical position from the top	
-		
-		if (scrollTop > 300 || jQuery(window).width() < 700) { 
-			jQuery('#header .top').addClass('solid');
+	function setHeaderBackground() {
+		var scrollTop = $(window).scrollTop();
+
+		if (scrollTop > 300 || $(window).width() < 700) {
+			$('#header .top').addClass('solid');
 		} else {
-			jQuery('#header .top').removeClass('solid');		
+			$('#header .top').removeClass('solid');
 		}
 	}
 
+	function login() {
+		var email = $('#email').val();
+		var password = $('#password').val();
 
+		fetch('/BookLounge/v1/authenticate', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: email,
+				password: password
+			})
+		})
+			.then(function(response) {
+				// Handle the response from the server
+				if (response.ok) {
+					// Login successful
+					console.log('Login successful');
+					// Redirect to the index.html page
+					window.location.href = 'index.html';
+				} else {
+					// Login failed
+					console.log('Login failed');
+				}
+			})
+			.catch(function(error) {
+				console.log('An error occurred:', error);
+			});
+	}
 
+	function register() {
+		window.location.href = 'register.html';
+	}
 
-	///////////////////////////////
-	// Initialize
-	///////////////////////////////
+	function registerUser(e) {
+		var currentPage = window.location.pathname;
+		if (currentPage.includes('register.html')) {
+			e.preventDefault();
+			var firstName = $('#firstName').val();
+			var lastName = $('#lastName').val();
+			var email = $('#email').val();
+			var password = $('#password').val();
+			var role = $('#role').val();
 
+			fetch('/BookLounge/v1/register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					firstName: firstName,
+					lastName: lastName,
+					email: email,
+					password: password,
+					role: role
+				})
+			})
+				.then(function (response) {
+					if (response.ok) {
+						console.log('Registration successful');
+						window.location.href = 'login.html';
+					} else {
+						console.log('Registration failed');
+					}
+				})
+				.catch(function (error) {
+					console.log('An error occurred:', error);
+				});
+		}
+	}
 
 	setSlideNav();
-	/*jQuery.noConflict();
-	setHomeBannerHeight();
-	centerHomeBannerText();*/
 	setHeaderBackground();
 
-	//Resize events
-	/*jQuery(window).smartresize(function(){
-		setHomeBannerHeight();
-		centerHomeBannerText();
+	$('#scrollToContent').click(function(e) {
+		e.preventDefault();
+		$.scrollTo("#portfolio", 1000, {
+			offset: -($('#header .top').height()),
+			axis: 'y'
+		});
+	});
+
+	$('nav > ul > li > a').click(function(e) {
+		e.preventDefault();
+		$.scrollTo($(this).attr('href'), 400, {
+			offset: -($('#header .top').height()),
+			axis: 'y'
+		});
+	});
+
+	$(window).scroll(function() {
 		setHeaderBackground();
-	});*/
-
-
-	//Set Down Arrow Button
-	jQuery('#scrollToContent').click(function(e){
-		e.preventDefault();
-		jQuery.scrollTo("#portfolio", 1000, { offset:-(jQuery('#header .top').height()), axis:'y' });
 	});
 
-	jQuery('nav > ul > li > a').click(function(e){
+	$('#do-login').click(function(e) {
 		e.preventDefault();
-		jQuery.scrollTo(jQuery(this).attr('href'), 400, { offset:-(jQuery('#header .top').height()), axis:'y' });
-	})
-
-	jQuery(window).scroll( function() {
-	   setHeaderBackground();
+		login();
 	});
 
-})();
+	$('#do-register').click(function(e) {
+		e.preventDefault();
+		register();
+	});
+
+	$('#do-register').click(function(e) {
+		e.preventDefault();
+		registerUser(e);
+	});
+});
