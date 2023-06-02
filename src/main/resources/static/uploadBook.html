@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookLounge - Upload Book</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/script.js"></script>
+</head>
+<body>
+<section class="uploadBook">
+    <div class="head">
+        <h1 class="company">BookLounge</h1>
+    </div>
+    <div class="form">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required>
+
+            <label for="pdfFile">PDF File:</label>
+            <input type="file" id="pdfFile" name="file" accept=".pdf" required>
+
+            <button type="submit">Upload Book</button>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>

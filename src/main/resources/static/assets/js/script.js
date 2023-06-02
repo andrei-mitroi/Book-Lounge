@@ -355,19 +355,21 @@ $(document).ready(function() {
     setSlideNav();
     setHeaderBackground();
 
-    $('#scrollToContent').click(function(e) {
-        e.preventDefault();
-        $.scrollTo("#portfolio", 1000, {
-            offset: -($('#header .top').height()),
-            axis: 'y'
-        });
-    });
-
     $('nav > ul > li > a').click(function(e) {
         e.preventDefault();
         $.scrollTo($(this).attr('href'), 400, {
             offset: -($('#header .top').height()),
             axis: 'y'
+        });
+    });
+
+    $(document).ready(function() {
+        $('#scrollToContent').click(function(e) {
+            e.preventDefault();
+            document.getElementById("Books").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
         });
     });
 
