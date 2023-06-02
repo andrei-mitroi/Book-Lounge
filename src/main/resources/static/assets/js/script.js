@@ -49,26 +49,21 @@ $(document).ready(function() {
             })
         })
             .then(function(response) {
-                // Handle the response from the server
                 if (response.ok) {
-                    // Login successful
                     console.log('Login successful');
-
-                    // Extract the token from the response
                     return response.json().then(function(data) {
-                        // Store the JWT token in sessionStorage
                         var token = data.token;
+                        var hasUploadedBook = data.hasUploadedBook;
+
                         if (token) {
                             sessionStorage.setItem('jwtToken', token);
-
-                            // Redirect to the index.html page
+                            sessionStorage.setItem('hasUploadedBook', hasUploadedBook);
                             window.location.href = 'index.html';
                         } else {
                             console.log('Token not found in the response data');
                         }
                     });
                 } else {
-                    // Login failed
                     console.log('Login failed');
                 }
             })
@@ -142,34 +137,220 @@ $(document).ready(function() {
 
     function downloadWarcraft() {
         var bookId = '6478a60588457c18a979b67c';
-
-        // Get the JWT token from sessionStorage
         var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
 
-        fetch('/BookLounge/v1/getBook/' + bookId, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token // Include the JWT token in the Authorization header
-            },
-        })
-            .then(function(response) {
-                if (response.ok) {
-                    return response.blob();
-                } else {
-                    throw new Error('Failed to download the book');
-                }
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
             })
-            .then(function(blob) {
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'The Art of Wrath of the Lich King.pdf';
-                link.click();
-            })
-            .catch(function(error) {
-                console.error('Failed to download the book:', error);
-            });
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'The Art of Wrath of the Lich King.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
     }
 
+
+    function downloadDune() {
+        var bookId = '6470dad230f3bf6c28ebeb4f';
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Dune.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
+    }
+
+    function downloadHarryPotter() {
+        var bookId = '64709a50f887ed5eb04dc688';
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Harry Potter and the Sorcerer Stone.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
+    }
+
+    function downloadCooking() {
+        var bookId = '6475b26c624bab17585739dd';
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Easy Peasy Cookbook.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
+    }
+
+    function downloadRings() {
+        var bookId = '6479db26725732017a3726b0';
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'The Lord of the Rings The Fellowship of the Ring.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
+    }
+
+    function downloadCode() {
+        var bookId = '6479daa5725732017a3726af';
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Failed to download the book');
+                    }
+                })
+                .then(function (blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Clean Code.pdf';
+                    link.click();
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(function (error) {
+                    console.error('Failed to download the book:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        }
+    }
 
     setSlideNav();
     setHeaderBackground();
@@ -209,9 +390,70 @@ $(document).ready(function() {
         registerUser(e);
     });
 
-    $('#downloadButton').click(function(e){
+    $('#downloadButtonWarcraft').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
         e.preventDefault();
-        downloadWarcraft(e);
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadWarcraft();
+        }
+    });
+
+    $('#downloadButtonDune').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        e.preventDefault();
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadDune();
+        }
+    });
+
+    $('#downloadButtonHarryPotter').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        e.preventDefault();
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadHarryPotter();
+        }
+    });
+
+    $('#downloadButtonCooking').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        e.preventDefault();
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadCooking();
+        }
+    });
+
+    $('#downloadButtonRings').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        e.preventDefault();
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadRings();
+        }
+    });
+
+    $('#downloadButtonCode').click(function (e) {
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        e.preventDefault();
+        if (hasUploadedBook === 'false') {
+            console.log('User has not uploaded a book');
+            $('#uploadBookPopup').addClass('show');
+        } else {
+            downloadCode();
+        }
     });
 
     $('#contactForm').submit(function(e) {

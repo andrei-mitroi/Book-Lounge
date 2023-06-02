@@ -24,6 +24,7 @@
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css">
 		<link rel="stylesheet" href="assets/css/style.css" media="screen"/>
+        <link rel="stylesheet" href="assets/css/popup.css">
 
 	</head>
 	
@@ -104,37 +105,44 @@
 						<p>Take a look at some of our stuff</p>
 					</header>
 					<section class="block-body">
+                        <div id="uploadBookPopup" class="popup">
+                            <div class="popup-content">
+                                <h2>Upload a Book</h2>
+                                <p>Sharing is caring! You need to upload a book before you can download.</p>
+                                <button id="uploadBookButton">Upload Book</button>
+                            </div>
+                        </div>
 						<div class="row">
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/Warcraft.jpg)">
-                                    <span id="downloadButton" class="btn btn-o-white">Download</span>
+                                    <span id="downloadButtonWarcraft" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/Dune.jpg)">
-									<span class="btn btn-o-white">Lorem Rocks</span>
+                                    <span id="downloadButtonDune" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/Rings.jpg)">
-									<span class="btn btn-o-white">Lorem Rocks</span>
+                                    <span id="downloadButtonRings" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/Code.jpg)">
-									<span class="btn btn-o-white">Lorem Rocks</span>
+                                    <span id="downloadButtonCode" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/Cooking.jpg)">
-									<span class="btn btn-o-white">Lorem Rocks</span>
+                                    <span id="downloadButtonCooking" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 							<div class="col-sm-4">
 								<a href="#" class="recent-work" style="background-image:url(assets/images/HarryPotter.jpg)">
-									<span class="btn btn-o-white">Lorem Rocks</span>
+                                    <span id="downloadButtonHarryPotter" class="btn btn-o-white">Download</span>
 								</a>
 							</div>
 						</div>
