@@ -28,8 +28,7 @@ public class SecurityConfiguration{
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getBook/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/BookLounge/v1/updateBook/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/BookLounge/v1/deleteBook/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/contact").authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
