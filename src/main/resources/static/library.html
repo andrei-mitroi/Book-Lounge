@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BookLounge Library</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/library.css">
+</head>
+<body>
+<h1>Books</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Download</th>
+    </tr>
+    </thead>
+    <tbody id="booksTableBody">
+    <!-- The book entries will be dynamically added here -->
+    </tbody>
+</table>
+
+<script>
+    // Fetch books from the backend and dynamically populate the table
+    fetch('/BookLounge/v1/getAllBooks')
+        .then(response => response.json())
+        .then(books => {
+            const booksTableBody = document.getElementById('booksTableBody');
+            books.forEach(book => {
+                const row = document.createElement('tr');
+                const titleCell = document.createElement('td');
+                const authorCell = document.createElement('td');
+                const downloadCell = document.createElement('td');
+                const downloadLink = document.createElement('a');
+
+                titleCell.textContent = book.title;
+                authorCell.textContent = book.author;
+
+                downloadLink.href = `/getBook/${book.id}`;
+                downloadLink.textContent = 'Download';
+                downloadLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    downloadBook(book.id);
+                });
+
+                downloadCell.appendChild(downloadLink);
+
+                row.appendChild(titleCell);
+                row.appendChild(authorCell);
+                row.appendChild(downloadCell);
+
+                booksTableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // Function to download the book
+    function downloadBook(bookId) {
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+        if (hasUploadedBook === 'true') {
+            fetch('/BookLounge/v1/getBook/' + bookId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'book.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    sessionStorage.setItem('hasUploadedBook', 'false');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            console.log('User has not uploaded a book');
+        }
+    }
+</script>
+</body>
+</html>
