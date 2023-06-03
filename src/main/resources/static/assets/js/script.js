@@ -352,6 +352,41 @@ $(document).ready(function() {
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        var token = sessionStorage.getItem('jwtToken');
+        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        var uploadForm = document.getElementById('uploadForm');
+
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Authorization header:', 'Bearer ' + token);
+            if (hasUploadedBook === 'false') {
+                var formData = new FormData(uploadForm);
+
+                fetch('/BookLounge/v1/addBook', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to add book');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
+    });
+
     setSlideNav();
     setHeaderBackground();
 
@@ -461,5 +496,20 @@ $(document).ready(function() {
     $('#contactForm').submit(function(e) {
         e.preventDefault();
         sendEmail();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the "Upload Book" button element by its ID
+        var uploadButton = document.getElementById('uploadBookButton');
+
+        // Add a click event listener to the button
+        uploadButton.addEventListener('click', function() {
+            redirectToUploadPage();
+        });
+
+        // Function to redirect the user to the upload.html page
+        function redirectToUploadPage() {
+            window.location.href = 'uploadBook.html';
+        }
     });
 });
