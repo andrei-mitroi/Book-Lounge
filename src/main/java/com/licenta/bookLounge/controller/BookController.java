@@ -107,7 +107,6 @@ public class BookController {
       }
    }
 
-
    @PostMapping("/addBook")
    public ResponseEntity<BookResponse> addBook(@RequestParam("file") MultipartFile file,
                                                @ModelAttribute BookRequest bookRequest, Principal principal) {

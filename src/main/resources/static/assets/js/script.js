@@ -352,41 +352,6 @@ $(document).ready(function() {
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var token = sessionStorage.getItem('jwtToken');
-        var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
-        var uploadForm = document.getElementById('uploadForm');
-
-        uploadForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('Authorization header:', 'Bearer ' + token);
-            if (hasUploadedBook === 'false') {
-                var formData = new FormData(uploadForm);
-
-                fetch('/BookLounge/v1/addBook', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: formData
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Failed to add book');
-                        }
-                    })
-                    .then(data => {
-                        console.log(data);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
-        });
-    });
-
     setSlideNav();
     setHeaderBackground();
 
