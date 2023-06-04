@@ -463,18 +463,88 @@ $(document).ready(function() {
         sendEmail();
     });
 
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Get the "Upload Book" button element by its ID
         var uploadButton = document.getElementById('uploadBookButton');
 
-        // Add a click event listener to the button
         uploadButton.addEventListener('click', function() {
             redirectToUploadPage();
         });
 
-        // Function to redirect the user to the upload.html page
         function redirectToUploadPage() {
             window.location.href = 'uploadBook.html';
         }
     });
+
+    function setupScrollToBooks() {
+        function scrollToBooks() {
+            var booksSection = document.getElementById("Books");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#Books']");
+        booksButton.addEventListener("click", scrollToBooks);
+    }
+
+    function setupScrollToServices() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("services");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#services']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    function setupScrollToBlog() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("blog");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#blog']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    function setupScrollToQuote() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("parallax");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#parallax']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    function setupScrollToContact() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("contact");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#contact']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    function setupScrollToTeam() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("testimonials");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#testimonials']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    function setupScrollToHome() {
+        function scrollToServices() {
+            var booksSection = document.getElementById("wrapper");
+            booksSection.scrollIntoView({ behavior: "smooth" });
+        }
+        var booksButton = document.querySelector("#drawer-right a[href='#wrapper']");
+        booksButton.addEventListener("click", scrollToServices);
+    }
+
+    setupScrollToBooks();
+    setupScrollToServices();
+    setupScrollToBlog();
+    setupScrollToQuote();
+    setupScrollToTeam();
+    setupScrollToContact();
+    setupScrollToHome();
+
 });
