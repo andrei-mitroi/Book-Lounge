@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookLounge - Upload Book</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="assets/css/uploadBook.css">
+</head>
+<body>
+<section class="uploadBook">
+    <div class="head">
+        <h1 class="company">BookLounge</h1>
+    </div>
+    <div class="form">
+        <form id='uploadForm' enctype="multipart/form-data">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required>
+
+            <label for="pdfFile">PDF File:</label>
+            <input type="file" id="pdfFile" name="file" accept=".pdf" required>
+
+            <button type="submit">Upload Book</button>
+        </form>
+    </div>
+</section>
+<script>
+    console.log('DOMContentLoaded event fired');
+    document.addEventListener('DOMContentLoaded', function() {
+        let token = sessionStorage.getItem('jwtToken');
+        let hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+        let uploadForm = document.getElementById('uploadForm');
+
+        console.log(uploadForm);
+
+        uploadForm.addEventListener('submit', function(e) {
+            console.log('Authorization header:', 'Bearer ' + token);
+            e.preventDefault();
+            if (hasUploadedBook === 'false') {
+                let formData = new FormData(uploadForm);
+
+                fetch('/BookLounge/v1/addBook', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            sessionStorage.setItem('hasUploadedBook', 'true');
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to add book');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data);
+                        window.location.href = 'index.html'
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
+    });
+</script>
+</body>
+</html>

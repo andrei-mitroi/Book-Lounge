@@ -50,7 +50,8 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        boolean hasUploadedBook = user.isHasUploadedBook();
+        return AuthenticationResponse.builder().token(jwtToken).hasUploadedBook(hasUploadedBook).build();
     }
 
     private String buildEmail(RegisterRequest request){

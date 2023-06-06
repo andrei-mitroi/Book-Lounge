@@ -1,0 +1,88 @@
+
+body {
+    background-image: url(../images/LoginBackground.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Assistant, sans-serif;
+    display: flex;
+    min-height: 90vh;
+}
+
+.register {
+    color: white;
+    background: #136a8a;
+    background: -webkit-linear-gradient(to right, #267871, #136a8a);
+    background: linear-gradient(to right, #267871, #136a8a);
+    margin: auto;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.2), 0px 10px 20px rgba(0,0,0,0.3), 0px 30px 60px 1px rgba(0,0,0,0.5);
+    border-radius: 8px;
+    padding: 50px;
+}
+
+.register .head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register .head .company {
+    font-size: 2.2em;
+}
+
+.register .msg {
+    text-align: center;
+}
+
+.register .form input[type=text].text,
+.register .form input[type=password].password {
+    border: none;
+    background: none;
+    box-shadow: 0px 2px 0px 0px white;
+    width: 100%;
+    color: white;
+    font-size: 1em;
+    outline: none;
+}
+
+.register .form .text::placeholder,
+.register .form .password::placeholder {
+    color: #D3D3D3;
+}
+
+.register .form input[type=password].password {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.register .form .btn-login,
+.register .form .btn-register {
+    background: none;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0px 0px 0px 2px white;
+    border-radius: 3px;
+    padding: 5px 2em;
+    transition: 0.5s;
+    margin-right: 10px;
+}
+
+.register .form .btn-login:hover,
+.register .form .btn-register:hover {
+    background: white;
+    color: dimgray;
+    transition: 0.5s;
+}
+
+.register .form p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.register .form select#role {
+    margin-top: -50px;
+}
+
+.register .form p a {
+    color: white;
+    text-decoration: none;
+}
