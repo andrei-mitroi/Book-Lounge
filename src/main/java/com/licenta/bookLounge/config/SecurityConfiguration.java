@@ -24,11 +24,10 @@ public class SecurityConfiguration{
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks")
-                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks").authenticated()
                         .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getBook/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/contact").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/contact").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session

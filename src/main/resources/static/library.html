@@ -32,7 +32,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/BookLounge/v1/getAllBooks')
+        var token = sessionStorage.getItem('jwtToken');
+        fetch('/BookLounge/v1/getAllBooks', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+        })
             .then(response => response.json())
             .then(books => {
                 const booksTableBody = document.getElementById('booksTableBody');
