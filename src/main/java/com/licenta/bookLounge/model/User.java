@@ -1,6 +1,9 @@
 package com.licenta.bookLounge.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @NonNull
     private String firstName;
     @NonNull
@@ -29,6 +31,8 @@ public class User implements UserDetails {
     private String password;
     @NonNull
     private Role role;
+
+    private boolean hasUploadedBook;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

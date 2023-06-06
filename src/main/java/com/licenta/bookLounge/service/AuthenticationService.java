@@ -38,7 +38,7 @@ public class AuthenticationService {
             throw new DuplicateEmail("Email already exists.");
         }
         var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
-                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(request.getRole())
+                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(request.getRole()).hasUploadedBook(false)
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -50,7 +50,8 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        boolean hasUploadedBook = user.isHasUploadedBook();
+        return AuthenticationResponse.builder().token(jwtToken).hasUploadedBook(hasUploadedBook).build();
     }
 
     private String buildEmail(RegisterRequest request){

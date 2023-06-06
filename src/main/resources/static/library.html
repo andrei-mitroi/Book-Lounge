@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BookLounge Library</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/library.css">
+    <link rel="stylesheet" href="assets/css/popuplibrary.css">
+</head>
+<body>
+<h1>Books</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Download</th>
+    </tr>
+    </thead>
+    <tbody id="booksTableBody">
+    </tbody>
+</table>
+
+<div id="uploadBookPopupLibrary" class="popupLibrary">
+    <div class="popup-content">
+        <h2>Upload a Book</h2>
+        <p>Sharing is caring! You need to upload a book before you can download.</p>
+        <a id="uploadBookButtonLibrary" href="uploadBook.html">Upload Book</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var token = sessionStorage.getItem('jwtToken');
+        fetch('/BookLounge/v1/getAllBooks', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+        })
+            .then(response => response.json())
+            .then(books => {
+                const booksTableBody = document.getElementById('booksTableBody');
+                books.forEach(book => {
+                    const row = document.createElement('tr');
+                    const titleCell = document.createElement('td');
+                    const authorCell = document.createElement('td');
+                    const downloadCell = document.createElement('td');
+                    const downloadLink = document.createElement('a');
+
+                    titleCell.textContent = book.title;
+                    authorCell.textContent = book.author;
+
+                    downloadLink.href = `/getBook/${book.id}`;
+                    downloadLink.textContent = 'Download';
+                    downloadLink.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        downloadBook(book.id);
+                    });
+
+                    downloadCell.appendChild(downloadLink);
+
+                    row.appendChild(titleCell);
+                    row.appendChild(authorCell);
+                    row.appendChild(downloadCell);
+
+                    booksTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        function downloadBook(bookId) {
+            var token = sessionStorage.getItem('jwtToken');
+            var hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
+
+            if (hasUploadedBook === 'true') {
+                fetch('/BookLounge/v1/getBook/' + bookId, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'book.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                        sessionStorage.setItem('hasUploadedBook', 'false');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                console.log('User has not uploaded a book');
+                var popup = document.getElementById('uploadBookPopupLibrary');
+                popup.classList.add('show');
+            }
+        }
+
+        // Get the "Upload Book" button element by its ID
+        var uploadButton = document.getElementById('uploadBookButtonLibrary');
+
+        // Add a click event listener to the button
+        uploadButton.addEventListener('click', function() {
+            redirectToUploadPage();
+        });
+
+        function redirectToUploadPage() {
+            window.location.href = 'uploadBook.html';
+        }
+    });
+</script>
+</body>
+</html>

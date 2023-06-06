@@ -36,19 +36,6 @@ public class BookService {
         return createBookResponse(savedBook);
     }
 
-    public BookResponse updateBook(String bookId, BookRequest bookRequest) {
-        Book book = findBookById(bookId);
-        updateBookFromRequest(book, bookRequest);
-        Book savedBook = bookRepository.save(book);
-        return createBookResponse(savedBook);
-    }
-
-    public boolean deleteBook(String bookId) {
-        Book book = findBookById(bookId);
-        bookRepository.deleteById(book.getId());
-        return true;
-    }
-
     private Book findBookById(String bookId) {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book with ID " + bookId + " not found"));
@@ -73,14 +60,5 @@ public class BookService {
                 .description(bookRequest.getDescription())
                 .pdfLink(bookRequest.getPdfLink())
                 .build();
-    }
-
-
-    private void updateBookFromRequest(Book book, BookRequest bookRequest) {
-        book.setTitle(bookRequest.getTitle());
-        book.setAuthor(bookRequest.getAuthor());
-        book.setGenre(bookRequest.getGenre());
-        book.setDescription(bookRequest.getDescription());
-        book.setPdfLink(bookRequest.getPdfLink());
     }
 }
