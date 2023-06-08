@@ -4,43 +4,35 @@ body {
     background-repeat: no-repeat;
     font-family: Assistant, sans-serif;
     display: flex;
-    min-height: 90vh;
-    color: white; /* Set text color to white */
+    flex-direction: column;
+    min-height: 100vh;
+    color: white;
+    align-items: center; /* Added */
+    justify-content: center; /* Added */
 }
 
-.block-heading {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.block-heading h1 {
-    font-size: 2.5em; /* Increase font size */
-    color: white; /* Set text color to white */
-}
-
-.block-heading p {
-    font-size: 1.5em; /* Increase font size */
-    color: white; /* Set text color to white */
+h1 {
+    font-size: 2.5em;
+    margin-top: 50px; /* Added */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px; /* Adjust as needed */
 }
 
-table th, table td {
+table th,
+table td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    color: white;
 }
 
 table th {
     font-weight: bold;
-    color: white; /* Set text color to white */
-}
-
-table td {
-    color: white; /* Set text color to white */
+    color: white;
 }
 
 a {
@@ -50,5 +42,5 @@ a {
 
 a:hover {
     text-decoration: underline;
-    color: white; /* Set text color to white on hover */
+    color: white;
 }

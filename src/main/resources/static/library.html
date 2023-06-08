@@ -14,6 +14,7 @@
     <tr>
         <th>Title</th>
         <th>Author</th>
+        <th>Description</th>
         <th>Download</th>
     </tr>
     </thead>
@@ -41,16 +42,19 @@
         })
             .then(response => response.json())
             .then(books => {
+                sessionStorage.setItem('books', JSON.stringify(books)); // Store the books data in sessionStorage
                 const booksTableBody = document.getElementById('booksTableBody');
                 books.forEach(book => {
                     const row = document.createElement('tr');
                     const titleCell = document.createElement('td');
                     const authorCell = document.createElement('td');
+                    const descriptionCell = document.createElement('td'); // Added book description cell
                     const downloadCell = document.createElement('td');
                     const downloadLink = document.createElement('a');
 
                     titleCell.textContent = book.title;
                     authorCell.textContent = book.author;
+                    descriptionCell.textContent = book.description; // Set book description text
 
                     downloadLink.href = `/getBook/${book.id}`;
                     downloadLink.textContent = 'Download';
@@ -63,6 +67,7 @@
 
                     row.appendChild(titleCell);
                     row.appendChild(authorCell);
+                    row.appendChild(descriptionCell); // Append description cell to the row
                     row.appendChild(downloadCell);
 
                     booksTableBody.appendChild(row);
@@ -88,7 +93,7 @@
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'book.pdf';
+                        a.download = getBookFileName(bookId); // Set the download filename dynamically
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
@@ -105,10 +110,26 @@
             }
         }
 
-        // Get the "Upload Book" button element by its ID
+        function getBookFileName(bookId) {
+            var title = ''; // Placeholder for the book title
+            var books = JSON.parse(sessionStorage.getItem('books'));
+            if (books) {
+                books.forEach(book => {
+                    if (book.id === bookId) {
+                        title = book.title;
+                    }
+                });
+            }
+
+            if (title !== '') {
+                return title + '.pdf'; // Return the book title with the .pdf extension
+            } else {
+                return 'book.pdf'; // Fallback to 'book.pdf' if the title is empty
+            }
+        }
+
         var uploadButton = document.getElementById('uploadBookButtonLibrary');
 
-        // Add a click event listener to the button
         uploadButton.addEventListener('click', function() {
             redirectToUploadPage();
         });
