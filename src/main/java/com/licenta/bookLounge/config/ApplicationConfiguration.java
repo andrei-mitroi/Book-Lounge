@@ -1,6 +1,5 @@
 package com.licenta.bookLounge.config;
 
-
 import com.licenta.bookLounge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,28 +19,29 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
-    }
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return username -> userRepository.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+	}
 
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(userDetailsService());
+		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		return authenticationProvider;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
-        return new ProviderManager(Collections.singletonList(authenticationProvider));
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+		return new ProviderManager(Collections.singletonList(authenticationProvider));
+	}
 }

@@ -1,9 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var $wrapper = $('#wrapper');
     var $drawerRight = $('#drawer-right');
 
     function setSlideNav() {
-        $(".toggleDrawer").click(function(e) {
+        $(".toggleDrawer").click(function (e) {
             e.preventDefault();
 
             if ($wrapper.css('marginLeft') === '0px') {
@@ -48,10 +48,10 @@ $(document).ready(function() {
                 password: password
             })
         })
-            .then(function(response) {
+            .then(function (response) {
                 if (response.ok) {
                     console.log('Login successful');
-                    return response.json().then(function(data) {
+                    return response.json().then(function (data) {
                         var token = data.token;
                         var hasUploadedBook = data.hasUploadedBook;
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
                     console.log('Login failed');
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log('An error occurred:', error);
             });
     }
@@ -121,15 +121,15 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             url: '/BookLounge/v1/contact',
-            data: JSON.stringify({ name: name, email: email, message: message }),
+            data: JSON.stringify({name: name, email: email, message: message}),
             contentType: 'application/json',
-            success: function(response) {
+            success: function (response) {
                 alert(response);
                 $('#subject').val('');
                 $('#exampleInputEmail2').val('');
                 $('#message').val('');
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert('Error: ' + error);
             }
         });
@@ -355,7 +355,7 @@ $(document).ready(function() {
     setSlideNav();
     setHeaderBackground();
 
-    $('nav > ul > li > a').click(function(e) {
+    $('nav > ul > li > a').click(function (e) {
         e.preventDefault();
         $.scrollTo($(this).attr('href'), 400, {
             offset: -($('#header .top').height()),
@@ -363,8 +363,8 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function() {
-        $('#scrollToContent').click(function(e) {
+    $(document).ready(function () {
+        $('#scrollToContent').click(function (e) {
             e.preventDefault();
             document.getElementById("Books").scrollIntoView({
                 behavior: "smooth",
@@ -373,21 +373,21 @@ $(document).ready(function() {
         });
     });
 
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         setHeaderBackground();
     });
 
-    $('#do-login').click(function(e) {
+    $('#do-login').click(function (e) {
         e.preventDefault();
         login();
     });
 
-    $('#do-register').click(function(e) {
+    $('#do-register').click(function (e) {
         e.preventDefault();
         register();
     });
 
-    $('#do-register').click(function(e) {
+    $('#do-register').click(function (e) {
         e.preventDefault();
         registerUser(e);
     });
@@ -458,16 +458,16 @@ $(document).ready(function() {
         }
     });
 
-    $('#contactForm').submit(function(e) {
+    $('#contactForm').submit(function (e) {
         e.preventDefault();
         sendEmail();
     });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var uploadButton = document.getElementById('uploadBookButton');
 
-        uploadButton.addEventListener('click', function() {
+        uploadButton.addEventListener('click', function () {
             redirectToUploadPage();
         });
 
@@ -479,8 +479,9 @@ $(document).ready(function() {
     function setupScrollToBooks() {
         function scrollToBooks() {
             var booksSection = document.getElementById("Books");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#Books']");
         booksButton.addEventListener("click", scrollToBooks);
     }
@@ -488,8 +489,9 @@ $(document).ready(function() {
     function setupScrollToServices() {
         function scrollToServices() {
             var booksSection = document.getElementById("services");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#services']");
         booksButton.addEventListener("click", scrollToServices);
     }
@@ -497,8 +499,9 @@ $(document).ready(function() {
     function setupScrollToBlog() {
         function scrollToServices() {
             var booksSection = document.getElementById("blog");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#blog']");
         booksButton.addEventListener("click", scrollToServices);
     }
@@ -506,8 +509,9 @@ $(document).ready(function() {
     function setupScrollToQuote() {
         function scrollToServices() {
             var booksSection = document.getElementById("parallax");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#parallax']");
         booksButton.addEventListener("click", scrollToServices);
     }
@@ -515,8 +519,9 @@ $(document).ready(function() {
     function setupScrollToContact() {
         function scrollToServices() {
             var booksSection = document.getElementById("contact");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#contact']");
         booksButton.addEventListener("click", scrollToServices);
     }
@@ -524,8 +529,9 @@ $(document).ready(function() {
     function setupScrollToTeam() {
         function scrollToServices() {
             var booksSection = document.getElementById("testimonials");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#testimonials']");
         booksButton.addEventListener("click", scrollToServices);
     }
@@ -533,8 +539,9 @@ $(document).ready(function() {
     function setupScrollToHome() {
         function scrollToServices() {
             var booksSection = document.getElementById("wrapper");
-            booksSection.scrollIntoView({ behavior: "smooth" });
+            booksSection.scrollIntoView({behavior: "smooth"});
         }
+
         var booksButton = document.querySelector("#drawer-right a[href='#wrapper']");
         booksButton.addEventListener("click", scrollToServices);
     }

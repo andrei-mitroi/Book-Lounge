@@ -15,27 +15,27 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration{
+public class SecurityConfiguration {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/BookLounge/v1/getBook/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/BookLounge/v1/contact").permitAll()
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.csrf().disable()
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(HttpMethod.GET, "/BookLounge/v1/getAllBooks").authenticated()
+						.requestMatchers(HttpMethod.GET, "/BookLounge/v1/getBook/**").authenticated()
+						.requestMatchers(HttpMethod.POST, "/BookLounge/v1/addBook").authenticated()
+						.requestMatchers(HttpMethod.POST, "/BookLounge/v1/contact").permitAll()
+						.anyRequest().permitAll()
+				)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
+				.authenticationProvider(authenticationProvider)
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return httpSecurity.build();
-    }
+		return httpSecurity.build();
+	}
 }

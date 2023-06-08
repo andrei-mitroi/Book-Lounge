@@ -12,26 +12,26 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class EmailNotificationService implements EmailSender{
+public class EmailNotificationService implements EmailSender {
 
-    private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
 
-    private final JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 
-    @Override
-    @Async
-    public void send(String receiver, String email) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
-            mimeMessageHelper.setText(email, true);
-            mimeMessageHelper.setTo(receiver);
-            mimeMessageHelper.setSubject("Welcome to BookLounge!");
-            mimeMessageHelper.setFrom("booklounge.business@gmail.com");
-            mailSender.send(mimeMessage);
-        } catch (jakarta.mail.MessagingException e) {
-            logger.error("Failed to send email", e);
-            throw new RuntimeException(e);
-        }
-    }
+	@Override
+	@Async
+	public void send(String receiver, String email) {
+		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
+			mimeMessageHelper.setText(email, true);
+			mimeMessageHelper.setTo(receiver);
+			mimeMessageHelper.setSubject("Welcome to BookLounge!");
+			mimeMessageHelper.setFrom("booklounge.business@gmail.com");
+			mailSender.send(mimeMessage);
+		} catch (jakarta.mail.MessagingException e) {
+			logger.error("Failed to send email", e);
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -32,7 +32,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var token = sessionStorage.getItem('jwtToken');
         fetch('/BookLounge/v1/getAllBooks', {
             method: 'GET',
@@ -58,7 +58,7 @@
 
                     downloadLink.href = `/getBook/${book.id}`;
                     downloadLink.textContent = 'Download';
-                    downloadLink.addEventListener('click', function(event) {
+                    downloadLink.addEventListener('click', function (event) {
                         event.preventDefault();
                         downloadBook(book.id);
                     });
@@ -130,7 +130,7 @@
 
         var uploadButton = document.getElementById('uploadBookButtonLibrary');
 
-        uploadButton.addEventListener('click', function() {
+        uploadButton.addEventListener('click', function () {
             redirectToUploadPage();
         });
 

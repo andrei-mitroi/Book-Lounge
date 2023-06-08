@@ -16,21 +16,21 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class S3Service {
 
-    private final S3Client s3Client;
+	private final S3Client s3Client;
 
-    public void uploadFile(MultipartFile file, String folderName, String bucketName) throws IOException {
-        String fileName = file.getOriginalFilename();
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
-        String key = folderName + "/" + fileName;
+	public void uploadFile(MultipartFile file, String folderName, String bucketName) throws IOException {
+		String fileName = file.getOriginalFilename();
+		String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+		String key = folderName + "/" + fileName;
 
-        Path tempFile = Files.createTempFile("temp-", encodedFileName);
-        file.transferTo(tempFile.toFile());
+		Path tempFile = Files.createTempFile("temp-", encodedFileName);
+		file.transferTo(tempFile.toFile());
 
-        s3Client.putObject(PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build(), tempFile);
+		s3Client.putObject(PutObjectRequest.builder()
+				.bucket(bucketName)
+				.key(key)
+				.build(), tempFile);
 
-        Files.delete(tempFile);
-    }
+		Files.delete(tempFile);
+	}
 }

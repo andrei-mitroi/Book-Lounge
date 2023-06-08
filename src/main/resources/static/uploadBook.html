@@ -35,14 +35,14 @@
 </section>
 <script>
     console.log('DOMContentLoaded event fired');
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         let token = sessionStorage.getItem('jwtToken');
         let hasUploadedBook = sessionStorage.getItem('hasUploadedBook');
         let uploadForm = document.getElementById('uploadForm');
 
         console.log(uploadForm);
 
-        uploadForm.addEventListener('submit', function(e) {
+        uploadForm.addEventListener('submit', function (e) {
             console.log('Authorization header:', 'Bearer ' + token);
             e.preventDefault();
             if (hasUploadedBook === 'false') {

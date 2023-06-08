@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
 public class DuplicateBookException extends RuntimeException {
-
-    public DuplicateBookException(String message) {
-        super(message);
-    }
+	public DuplicateBookException(String message) {
+		super(message);
+	}
 }

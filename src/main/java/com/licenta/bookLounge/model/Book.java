@@ -10,17 +10,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Books")
 public class Book {
 
-    @Id
-    private String id;
-    @NonNull
-    private String title;
-    @NonNull
-    private String author;
-    @NonNull
-    private String genre;
-    @NonNull
-    private String description;
+	@Id
+	private String id;
+	@NonNull
+	private String title;
+	@NonNull
+	private String author;
+	@NonNull
+	private String genre;
+	@NonNull
+	private String description;
 
-    private String pdfLink;
+	private String pdfLink;
 
 }

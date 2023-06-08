@@ -15,50 +15,50 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class BookService {
-    private final BookRepository bookRepository;
+	private final BookRepository bookRepository;
 
-    public List<BookResponse> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream()
-                .map(this::createBookResponse)
-                .collect(Collectors.toList());
-    }
+	public List<BookResponse> getAllBooks() {
+		List<Book> books = bookRepository.findAll();
+		return books.stream()
+				.map(this::createBookResponse)
+				.collect(Collectors.toList());
+	}
 
-    public BookResponse getBook(String bookId) {
-        Book book = findBookById(bookId);
-        return createBookResponse(book);
-    }
+	public BookResponse getBook(String bookId) {
+		Book book = findBookById(bookId);
+		return createBookResponse(book);
+	}
 
-    public BookResponse addBook(BookRequest bookRequest) {
-        validateBookNotExistsByTitle(bookRequest.getTitle());
-        Book book = createBook(bookRequest);
-        Book savedBook = bookRepository.save(book);
-        return createBookResponse(savedBook);
-    }
+	public BookResponse addBook(BookRequest bookRequest) {
+		validateBookNotExistsByTitle(bookRequest.getTitle());
+		Book book = createBook(bookRequest);
+		Book savedBook = bookRepository.save(book);
+		return createBookResponse(savedBook);
+	}
 
-    private Book findBookById(String bookId) {
-        return bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Book with ID " + bookId + " not found"));
-    }
+	private Book findBookById(String bookId) {
+		return bookRepository.findById(bookId)
+				.orElseThrow(() -> new BookNotFoundException("Book with ID " + bookId + " not found"));
+	}
 
-    private void validateBookNotExistsByTitle(String title) {
-        if (bookRepository.existsByTitle(title)) {
-            throw new DuplicateBookException("Book with title " + title + " already exists");
-        }
-    }
+	private void validateBookNotExistsByTitle(String title) {
+		if (bookRepository.existsByTitle(title)) {
+			throw new DuplicateBookException("Book with title " + title + " already exists");
+		}
+	}
 
-    private BookResponse createBookResponse(Book book) {
-        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(),
-                book.getDescription(), book.getPdfLink());
-    }
+	private BookResponse createBookResponse(Book book) {
+		return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(),
+				book.getDescription(), book.getPdfLink());
+	}
 
-    private Book createBook(BookRequest bookRequest) {
-        return Book.builder()
-                .title(bookRequest.getTitle())
-                .author(bookRequest.getAuthor())
-                .genre(bookRequest.getGenre())
-                .description(bookRequest.getDescription())
-                .pdfLink(bookRequest.getPdfLink())
-                .build();
-    }
+	private Book createBook(BookRequest bookRequest) {
+		return Book.builder()
+				.title(bookRequest.getTitle())
+				.author(bookRequest.getAuthor())
+				.genre(bookRequest.getGenre())
+				.description(bookRequest.getDescription())
+				.pdfLink(bookRequest.getPdfLink())
+				.build();
+	}
 }

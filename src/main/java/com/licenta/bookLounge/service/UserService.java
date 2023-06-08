@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+	public User getUserByEmail(String email) {
+		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+	}
 
-    public void saveUser(User user){
-        userRepository.save(user);
-    }
+	public void saveUser(User user) {
+		userRepository.save(user);
+	}
 }
