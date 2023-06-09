@@ -10,8 +10,9 @@ import com.licenta.bookLounge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,7 +60,8 @@ public class AuthenticationService {
 	private String buildEmail(RegisterRequest request) {
 		String htmlTemplate = "";
 		try {
-			Resource resource = new ClassPathResource("email-template.html");
+			ResourceLoader resourceLoader = new DefaultResourceLoader();
+			Resource resource = resourceLoader.getResource("static/email-template.html");
 			htmlTemplate = new String(Files.readAllBytes(resource.getFile().toPath()));
 			htmlTemplate = htmlTemplate.replace("[User's Name]", request.getFirstName());
 		} catch (IOException e) {

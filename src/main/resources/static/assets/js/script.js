@@ -357,19 +357,19 @@ $(document).ready(function () {
 
     $('nav > ul > li > a').click(function (e) {
         e.preventDefault();
-        $.scrollTo($(this).attr('href'), 400, {
-            offset: -($('#header .top').height()),
-            axis: 'y'
-        });
+        var target = $(this).attr('href');
+        $('html, body').animate({
+            scrollTop: $(target).offset().top
+        }, 400);
     });
 
     $(document).ready(function () {
         $('#scrollToContent').click(function (e) {
             e.preventDefault();
-            document.getElementById("Books").scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            var target = $("#Books");
+            $('html, body').animate({
+                scrollTop: target.offset().top
+            }, 400);
         });
     });
 
