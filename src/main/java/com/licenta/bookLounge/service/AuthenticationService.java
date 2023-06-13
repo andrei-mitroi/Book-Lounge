@@ -27,6 +27,7 @@ public class AuthenticationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
 	private final UserRepository userRepository;
+        private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
@@ -42,7 +43,7 @@ public class AuthenticationService {
 				.email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole()).hasUploadedBook(false)
 				.build();
-		userRepository.save(user);
+		userService.saveUser(user);
 		var jwtToken = jwtService.generateToken(user);
 		emailSender.send(request.getEmail(), buildEmail(request));
 		return AuthenticationResponse.builder().token(jwtToken).build();

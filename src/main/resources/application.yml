@@ -3,12 +3,6 @@ server:
   servlet:
     context-path: /
 spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://${databaseUser}:${databasePassword}@booklounge.b754vyg.mongodb.net/?tls=true
-      database: BookLounge
-      username: ${databaseUser}
-      password: ${databasePassword}
   servlet:
     multipart:
       max-file-size: 50MB
