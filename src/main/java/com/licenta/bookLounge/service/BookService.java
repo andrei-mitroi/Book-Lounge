@@ -9,6 +9,7 @@ import com.licenta.bookLounge.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,10 @@ public class BookService {
 	private final BookRepository bookRepository;
 
 	public List<BookResponse> getAllBooks() {
+
 		List<Book> books = bookRepository.findAll();
+		Comparator<Book> sortByAuthor = Comparator.comparing(book -> book.getAuthor().toLowerCase());
+		books.sort(sortByAuthor);
 		return books.stream()
 				.map(this::createBookResponse)
 				.collect(Collectors.toList());
