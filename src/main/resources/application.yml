@@ -3,6 +3,14 @@ server:
   servlet:
     context-path: /
 spring:
+  config:
+    import: aws-secretsmanager:BookLounge
+  data:
+    mongodb:
+      uri: mongodb+srv://${databaseUser}:${databasePassword}@booklounge.b754vyg.mongodb.net/?tls=true
+      database: BookLounge
+    security:
+      jwtKey: ${jwtSecret}
   servlet:
     multipart:
       max-file-size: 50MB
@@ -23,4 +31,3 @@ spring:
     secretKey: ${AwsSecretKey}
     region: eu-north-1
     bucketName: book-lounge-storage
-    secretName: BookLounge

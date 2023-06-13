@@ -16,7 +16,7 @@ public class SecretsManagerConfig {
    private String region;
 
    @Value("${spring.aws.accessKey}")
-   private String awsAccessKeyId;
+   private String awsAccessKey;
 
    @Value("${spring.aws.secretKey}")
    private String awsSecretKey;
@@ -25,11 +25,11 @@ public class SecretsManagerConfig {
    public SecretsManagerClient secretsManagerClient() {
 
       AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(
-            AwsBasicCredentials.create(awsAccessKeyId, awsSecretKey));
+              AwsBasicCredentials.create(awsAccessKey, awsSecretKey));
 
       return SecretsManagerClient.builder()
-            .region(Region.of(region))
-            .credentialsProvider(credentialsProvider)
-            .build();
+              .region(Region.of(region))
+              .credentialsProvider(credentialsProvider)
+              .build();
    }
 }

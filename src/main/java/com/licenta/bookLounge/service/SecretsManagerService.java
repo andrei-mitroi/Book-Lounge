@@ -18,8 +18,8 @@ public class SecretsManagerService {
 
    public String getSecret(String secretName, String secretKey) {
       GetSecretValueRequest secretValueRequest = GetSecretValueRequest.builder()
-            .secretId(secretName)
-            .build();
+              .secretId(secretName)
+              .build();
 
       GetSecretValueResponse secretValueResponse = secretsManagerClient.getSecretValue(secretValueRequest);
       String secretString = secretValueResponse.secretString();
