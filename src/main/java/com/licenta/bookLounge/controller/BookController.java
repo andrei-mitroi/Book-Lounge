@@ -7,6 +7,7 @@ import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.model.User;
 import com.licenta.bookLounge.repository.UserRepository;
 import com.licenta.bookLounge.service.BookService;
+import com.licenta.bookLounge.service.PaginatedBookResponse;
 import com.licenta.bookLounge.service.S3Service;
 import com.licenta.bookLounge.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,13 +45,16 @@ public class BookController {
 	private String bucketName;
 
 	@GetMapping("/getAllBooks")
-	public ResponseEntity<List<BookResponse>> getAllBooks() {
+	public ResponseEntity<PaginatedBookResponse> getAllBooks(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int pageSize
+	) {
 		try {
-			List<BookResponse> books = bookService.getAllBooks();
-			if (books.isEmpty()) {
+			PaginatedBookResponse bookResponse = bookService.getAllBooks(page, pageSize);
+			if (bookResponse.getContent().isEmpty()) {
 				return ResponseEntity.noContent().build();
 			}
-			return ResponseEntity.ok(books);
+			return ResponseEntity.ok(bookResponse);
 		} catch (Exception e) {
 			logger.error("Failed to retrieve books: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
