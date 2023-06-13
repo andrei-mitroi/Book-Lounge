@@ -13,9 +13,6 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
-  security:
-    jwt:
-      secret: ${jwtSecret}
   mail:
     properties:
       mail:
@@ -32,3 +29,4 @@ spring:
     secretKey: ${AwsSecretKey}
     region: eu-north-1
     bucketName: book-lounge-storage
+    secretName: BookLounge

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 	private final UserRepository userRepository;
+        private final SecretsManagerService service;
 
 	public User getUserByEmail(String email) {
 		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -19,4 +20,5 @@ public class UserService {
 	public void saveUser(User user) {
 		userRepository.save(user);
 	}
+
 }
