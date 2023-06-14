@@ -16,7 +16,6 @@
         <form id='uploadForm' enctype="multipart/form-data">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
-
             <label for="author">Author:</label>
             <input type="text" id="author" name="author" required>
 
@@ -24,9 +23,14 @@
             <textarea id="description" name="description" required></textarea>
 
             <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre" required>
-
-            <label for="pdfFile">PDF File:</label>
+            <select id="genre" name="genre" required>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Cooking">Cooking</option>
+                <option value="Technology">Technology</option>
+                <option value="Other">Other</option>
+            </select>
+            <br>
             <input type="file" id="pdfFile" name="file" accept=".pdf" required>
 
             <button type="submit">Upload Book</button>

@@ -2,10 +2,7 @@ package com.licenta.bookLounge.service;
 
 import com.licenta.bookLounge.BookLoungeApplication;
 import com.licenta.bookLounge.exception.DuplicateEmail;
-import com.licenta.bookLounge.model.AuthenticationRequest;
-import com.licenta.bookLounge.model.AuthenticationResponse;
-import com.licenta.bookLounge.model.RegisterRequest;
-import com.licenta.bookLounge.model.User;
+import com.licenta.bookLounge.model.*;
 import com.licenta.bookLounge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,6 +24,7 @@ public class AuthenticationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BookLoungeApplication.class);
 	private final UserRepository userRepository;
+	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
@@ -40,9 +38,9 @@ public class AuthenticationService {
 		}
 		var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
 				.email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-				.role(request.getRole()).hasUploadedBook(false)
+				.role(Role.USER).hasUploadedBook(false)
 				.build();
-		userRepository.save(user);
+		userService.saveUser(user);
 		var jwtToken = jwtService.generateToken(user);
 		emailSender.send(request.getEmail(), buildEmail(request));
 		return AuthenticationResponse.builder().token(jwtToken).build();

@@ -7,6 +7,7 @@ import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.model.User;
 import com.licenta.bookLounge.repository.UserRepository;
 import com.licenta.bookLounge.service.BookService;
+import com.licenta.bookLounge.service.PaginatedBookResponse;
 import com.licenta.bookLounge.service.S3Service;
 import com.licenta.bookLounge.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +19,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("BookLounge/v1")
@@ -37,19 +32,23 @@ public class BookController {
 	private final S3Service s3Service;
 	private final UserService userService;
 	private final UserRepository userRepository;
+
 	@Value("${spring.aws.region}")
 	String region;
 	@Value("${spring.aws.bucketName}")
 	private String bucketName;
 
 	@GetMapping("/getAllBooks")
-	public ResponseEntity<List<BookResponse>> getAllBooks() {
+	public ResponseEntity<PaginatedBookResponse> getAllBooks(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int pageSize
+	) {
 		try {
-			List<BookResponse> books = bookService.getAllBooks();
-			if (books.isEmpty()) {
+			PaginatedBookResponse bookResponse = bookService.getAllBooks(page, pageSize);
+			if (bookResponse.getContent().isEmpty()) {
 				return ResponseEntity.noContent().build();
 			}
-			return ResponseEntity.ok(books);
+			return ResponseEntity.ok(bookResponse);
 		} catch (Exception e) {
 			logger.error("Failed to retrieve books: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -67,21 +66,8 @@ public class BookController {
 			BookResponse book = bookService.getBook(bookId);
 			String pdfLink = book.getPdfLink();
 
-			S3Client s3Client = S3Client.builder()
-					.region(Region.of(region))
-					.build();
+			byte[] fileBytes = s3Service.downloadFile(pdfLink);
 
-			String bucketName = extractBucketNameFromS3Uri(pdfLink);
-			String objectKey = extractObjectKeyFromS3Uri(pdfLink);
-
-			GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-					.bucket(bucketName)
-					.key(objectKey)
-					.build();
-
-			ResponseBytes<GetObjectResponse> responseBytes = s3Client.getObjectAsBytes(getObjectRequest);
-
-			byte[] fileBytes = responseBytes.asByteArray();
 			Resource resource = new ByteArrayResource(fileBytes);
 
 			HttpHeaders headers = new HttpHeaders();
@@ -127,17 +113,6 @@ public class BookController {
 			logger.error("Failed to add book: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-	}
-
-	private String extractBucketNameFromS3Uri(String uri) {
-		int startIndex = uri.indexOf("//") + 2;
-		int endIndex = uri.indexOf("/", startIndex);
-		return uri.substring(startIndex, endIndex);
-	}
-
-	private String extractObjectKeyFromS3Uri(String uri) {
-		int startIndex = uri.indexOf("/", uri.indexOf("//") + 2) + 1;
-		return uri.substring(startIndex);
 	}
 
 	private String createPdfLink(BookRequest bookRequest) {

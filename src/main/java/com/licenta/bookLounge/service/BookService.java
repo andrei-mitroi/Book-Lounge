@@ -7,6 +7,10 @@ import com.licenta.bookLounge.model.BookRequest;
 import com.licenta.bookLounge.model.BookResponse;
 import com.licenta.bookLounge.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,12 +21,15 @@ import java.util.stream.Collectors;
 public class BookService {
 	private final BookRepository bookRepository;
 
-	public List<BookResponse> getAllBooks() {
-		List<Book> books = bookRepository.findAll();
-		return books.stream()
+	public PaginatedBookResponse getAllBooks(int page, int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("author").ascending());
+		Page<Book> bookPage = bookRepository.findAll(pageable);
+		List<BookResponse> bookResponses = bookPage.stream()
 				.map(this::createBookResponse)
 				.collect(Collectors.toList());
+		return new PaginatedBookResponse(bookResponses, bookPage.getTotalElements());
 	}
+
 
 	public BookResponse getBook(String bookId) {
 		Book book = findBookById(bookId);

@@ -15,7 +15,7 @@
         <th>Title</th>
         <th>Author</th>
         <th>Description</th>
-        <th>Download</th>
+        <th> </th>
     </tr>
     </thead>
     <tbody id="booksTableBody">
@@ -30,52 +30,87 @@
     </div>
 </div>
 
+<button id="previousButton">Previous</button>
+<button id="nextButton">Next</button>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var token = sessionStorage.getItem('jwtToken');
-        fetch('/BookLounge/v1/getAllBooks', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token
-            },
-        })
-            .then(response => response.json())
-            .then(books => {
-                sessionStorage.setItem('books', JSON.stringify(books)); // Store the books data in sessionStorage
-                const booksTableBody = document.getElementById('booksTableBody');
-                books.forEach(book => {
-                    const row = document.createElement('tr');
-                    const titleCell = document.createElement('td');
-                    const authorCell = document.createElement('td');
-                    const descriptionCell = document.createElement('td'); // Added book description cell
-                    const downloadCell = document.createElement('td');
-                    const downloadLink = document.createElement('a');
+        var currentPage = 0;
+        var pageSize = 10;
+        var totalBooks = 0;
 
-                    titleCell.textContent = book.title;
-                    authorCell.textContent = book.author;
-                    descriptionCell.textContent = book.description; // Set book description text
+        function loadBooks() {
+            currentPage = Math.max(currentPage, 0);
+            const maxPage = Math.max(Math.ceil(totalBooks / pageSize) - 1, 0);
 
-                    downloadLink.href = `/getBook/${book.id}`;
-                    downloadLink.textContent = 'Download';
-                    downloadLink.addEventListener('click', function (event) {
-                        event.preventDefault();
-                        downloadBook(book.id);
-                    });
+            if (currentPage > maxPage) {
+                currentPage = maxPage;
+            }
 
-                    downloadCell.appendChild(downloadLink);
-
-                    row.appendChild(titleCell);
-                    row.appendChild(authorCell);
-                    row.appendChild(descriptionCell); // Append description cell to the row
-                    row.appendChild(downloadCell);
-
-                    booksTableBody.appendChild(row);
-                });
+            fetch(`/BookLounge/v1/getAllBooks?page=${currentPage}&pageSize=${pageSize}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not OK');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        if (typeof data === 'object' && data !== null) {
+                            const books = data.content;
+                            totalBooks = data.totalElements;
+                            sessionStorage.setItem('books', JSON.stringify(books));
+                            const booksTableBody = document.getElementById('booksTableBody');
+                            booksTableBody.innerHTML = ''; // Clear the existing table rows
+                            books.forEach(book => {
+                                const row = document.createElement('tr');
+                                const titleCell = document.createElement('td');
+                                const authorCell = document.createElement('td');
+                                const descriptionCell = document.createElement('td');
+                                const downloadCell = document.createElement('td');
+                                const downloadLink = document.createElement('a');
+
+                                titleCell.textContent = book.title;
+                                authorCell.textContent = book.author;
+                                descriptionCell.textContent = book.description;
+
+                                downloadLink.href = `/getBook/${book.id}`;
+                                downloadLink.textContent = 'Download';
+                                downloadLink.addEventListener('click', function (event) {
+                                    event.preventDefault();
+                                    downloadBook(book.id);
+                                });
+
+                                downloadCell.appendChild(downloadLink);
+
+                                row.appendChild(titleCell);
+                                row.appendChild(authorCell);
+                                row.appendChild(descriptionCell);
+                                row.appendChild(downloadCell);
+
+                                booksTableBody.appendChild(row);
+                            });
+                            updatePaginationButtons();
+                        } else {
+                            throw new Error('Invalid JSON response');
+                        }
+                    } catch (error) {
+                        throw new Error('Failed to parse JSON response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
         function downloadBook(bookId) {
             var token = sessionStorage.getItem('jwtToken');
@@ -111,7 +146,7 @@
         }
 
         function getBookFileName(bookId) {
-            var title = ''; // Placeholder for the book title
+            var title = '';
             var books = JSON.parse(sessionStorage.getItem('books'));
             if (books) {
                 books.forEach(book => {
@@ -122,14 +157,47 @@
             }
 
             if (title !== '') {
-                return title + '.pdf'; // Return the book title with the .pdf extension
+                return title + '.pdf';
             } else {
-                return 'book.pdf'; // Fallback to 'book.pdf' if the title is empty
+                return 'book.pdf';
             }
         }
 
-        var uploadButton = document.getElementById('uploadBookButtonLibrary');
+        function updatePaginationButtons() {
+            const prevButton = document.getElementById('previousButton');
+            const nextButton = document.getElementById('nextButton');
 
+            prevButton.removeEventListener('click', goToPreviousPage);
+            nextButton.removeEventListener('click', goToNextPage);
+
+            prevButton.addEventListener('click', goToPreviousPage);
+            nextButton.addEventListener('click', goToNextPage);
+
+            if (currentPage === 0) {
+                prevButton.disabled = true;
+            } else {
+                prevButton.disabled = false;
+            }
+
+            const maxPage = Math.ceil(totalBooks / pageSize) - 1;
+            if (currentPage === maxPage || totalBooks === 0) {
+                nextButton.disabled = true;
+            } else {
+                nextButton.disabled = false;
+            }
+        }
+
+        function goToPreviousPage() {
+            currentPage--;
+            loadBooks();
+        }
+
+        function goToNextPage() {
+            currentPage++;
+            loadBooks();
+        }
+
+        var uploadButton = document.getElementById('uploadBookButtonLibrary');
         uploadButton.addEventListener('click', function () {
             redirectToUploadPage();
         });
@@ -137,6 +205,8 @@
         function redirectToUploadPage() {
             window.location.href = 'uploadBook.html';
         }
+
+        loadBooks();
     });
 </script>
 </body>
