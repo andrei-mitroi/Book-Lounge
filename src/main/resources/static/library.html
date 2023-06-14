@@ -15,7 +15,7 @@
         <th>Title</th>
         <th>Author</th>
         <th>Description</th>
-        <th>Download</th>
+        <th> </th>
     </tr>
     </thead>
     <tbody id="booksTableBody">
@@ -43,11 +43,11 @@
         var totalBooks = 0;
 
         function loadBooks() {
-            currentPage = Math.max(currentPage, 0); // Ensure currentPage is not negative
-            const maxPage = Math.max(Math.ceil(totalBooks / pageSize) - 1, 0); // Calculate the maximum page index
+            currentPage = Math.max(currentPage, 0);
+            const maxPage = Math.max(Math.ceil(totalBooks / pageSize) - 1, 0);
 
             if (currentPage > maxPage) {
-                currentPage = maxPage; // Adjust currentPage if it exceeds the maximum page index
+                currentPage = maxPage;
             }
 
             fetch(`/BookLounge/v1/getAllBooks?page=${currentPage}&pageSize=${pageSize}`, {
