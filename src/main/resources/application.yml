@@ -27,7 +27,7 @@ spring:
     password: ${emailPassword}
     port: '587'
   aws:
-    accessKey: ${AwsAccessKey}
-    secretKey: ${AwsSecretKey}
+    s3accessKey: ${AwsAccessKey}
+    s3secretKey: ${AwsSecretKey}
     region: eu-north-1
     bucketName: book-lounge-storage
