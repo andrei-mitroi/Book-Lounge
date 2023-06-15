@@ -15,10 +15,10 @@ public class S3Config {
 	@Value("${spring.aws.region}")
 	private String awsRegion;
 
-	@Value("${spring.aws.s3accessKey}")
+	@Value("${spring.aws.s3AccessKey}")
 	private String awsAccessKeyId;
 
-	@Value("${spring.aws.s3secretKey}")
+	@Value("${spring.aws.s3SecretKey}")
 	private String awsSecretKey;
 
 	@Bean
